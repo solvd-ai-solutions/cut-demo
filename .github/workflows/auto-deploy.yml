@@ -1,0 +1,51 @@
+name: Auto Deploy AI Components
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Manual trigger
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+
+jobs:
+  auto-commit-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build project
+      run: npm run build
+    
+    - name: Auto commit and push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-deploy: AI system updates $(date)" && git push)
+    
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.ORG_ID }}
+        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        vercel-args: '--prod'
+    
+    - name: Notify deployment status
+      run: |
+        echo "🚀 AI Components automatically deployed to Vercel!"
+        echo "✅ Build completed successfully"
+        echo "🌐 Your demo is now live with AI features"

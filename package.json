@@ -12,7 +12,10 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "deploy:ai": "git add . && git commit -m 'Deploy AI components' && git push origin main",
+    "deploy:auto": "npm run build && npm run deploy:ai",
+    "watch:deploy": "nodemon --exec 'npm run deploy:auto' --watch src --watch components --watch services"
   },
   "dependencies": {
     "clsx": "^2.0.0",
