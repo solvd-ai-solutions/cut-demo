@@ -1,0 +1,186 @@
+/* Solv Solutions Design Tokens */
+:root {
+  /* Brand Colors */
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  --color-teal: #4FB3A6;
+  --color-coral: #F29E8E;
+  --color-lavender: #C5A3E0;
+  
+  /* Color Variants */
+  --color-teal-dark: #3a9088;
+  --color-teal-light: rgba(79, 179, 166, 0.1);
+  --color-teal-medium: rgba(79, 179, 166, 0.3);
+  --color-coral-light: rgba(242, 158, 142, 0.1);
+  --color-coral-medium: rgba(242, 158, 142, 0.3);
+  --color-coral-dark: rgba(242, 158, 142, 0.5);
+  --color-lavender-light: rgba(197, 163, 224, 0.1);
+  --color-lavender-medium: rgba(197, 163, 224, 0.3);
+  
+  /* Text Colors */
+  --color-text-primary: var(--color-black);
+  --color-text-muted: rgba(0, 0, 0, 0.7);
+  --color-text-subtle: rgba(0, 0, 0, 0.5);
+  --color-text-inverse: var(--color-white);
+  
+  /* Background Colors */
+  --color-bg-primary: var(--color-white);
+  --color-bg-secondary: rgba(0, 0, 0, 0.02);
+  --color-bg-success: var(--color-teal-light);
+  --color-bg-warning: var(--color-coral-light);
+  --color-bg-info: var(--color-lavender-light);
+  --color-bg-error: var(--color-coral-medium);
+  
+  /* Border Colors */
+  --color-border-primary: var(--color-black);
+  --color-border-teal: var(--color-teal);
+  --color-border-coral: var(--color-coral);
+  --color-border-lavender: var(--color-lavender);
+  
+  /* Typography Scale */
+  --font-family-base: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  
+  --font-size-h1: 28px;
+  --font-size-h2: 20px;
+  --font-size-body: 16px;
+  --font-size-small: 14px;
+  --font-size-xs: 12px;
+  
+  --line-height-h1: 36px;
+  --line-height-h2: 28px;
+  --line-height-body: 24px;
+  --line-height-small: 20px;
+  --line-height-xs: 16px;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Spacing Scale */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  
+  /* Container Spacing */
+  --container-padding: var(--space-6);
+  --component-spacing: var(--space-4);
+  --grid-gap: var(--space-4);
+  
+  /* Border Radius */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* Border Width */
+  --border-width-none: 0px;
+  --border-width-thin: 1px;
+  --border-width-thick: 2px;
+  --border-width-thicker: 4px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Animation */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+  
+  --easing-ease: ease;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
+  --easing-ease-in-out: ease-in-out;
+  --easing-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+  
+  /* Breakpoints (for JavaScript usage) */
+  --breakpoint-sm: 360px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  
+  /* Component Specific Tokens */
+  --button-padding-y: var(--space-2);
+  --button-padding-x: var(--space-4);
+  --button-padding-large-y: var(--space-3);
+  --button-padding-large-x: var(--space-6);
+  
+  --input-padding-y: var(--space-2);
+  --input-padding-x: var(--space-3);
+  --input-border-radius: var(--radius-md);
+  
+  --card-padding: var(--container-padding);
+  --card-border-radius: var(--radius-md);
+  --card-border-width: var(--border-width-thick);
+  
+  --modal-padding: var(--space-6);
+  --modal-border-radius: var(--radius-lg);
+  --modal-backdrop-color: rgba(0, 0, 0, 0.5);
+  
+  /* Focus Ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-teal);
+  --focus-ring: 0 0 0 var(--focus-ring-offset) var(--color-bg-primary), 
+                0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+  
+  /* Status Colors */
+  --color-success: var(--color-teal);
+  --color-success-bg: var(--color-teal-light);
+  --color-warning: var(--color-coral);
+  --color-warning-bg: var(--color-coral-light);
+  --color-info: var(--color-lavender);
+  --color-info-bg: var(--color-lavender-light);
+  --color-error: var(--color-coral);
+  --color-error-bg: var(--color-coral-dark);
+}
+
+/* Dark mode tokens (if needed) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: var(--color-white);
+    --color-text-muted: rgba(255, 255, 255, 0.7);
+    --color-text-subtle: rgba(255, 255, 255, 0.5);
+    --color-text-inverse: var(--color-black);
+    --color-bg-primary: var(--color-black);
+    --color-bg-secondary: rgba(255, 255, 255, 0.02);
+    --color-border-primary: var(--color-white);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+  }
+}
