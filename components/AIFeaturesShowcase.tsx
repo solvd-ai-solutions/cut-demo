@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Brain, Sparkles, Zap, Target, TrendingUp, BarChart3, MessageSquare, Camera, DollarSign, Shield, X, CheckCircle, Package, Users, Clock } from 'lucide-react';
+import { Brain, Zap, Target, TrendingUp, MessageSquare, Camera, X, CheckCircle, Package } from 'lucide-react';
 import { cn } from '../utils';
 
 interface AIFeaturesShowcaseProps {

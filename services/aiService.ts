@@ -1,4 +1,4 @@
-import { Material, CutJob, MeasurementUnit } from '../types';
+import { Material, CutJob } from '../types';
 
 // AI Service Interface
 export interface AIRecommendation {
@@ -37,6 +37,7 @@ export interface AIPricingRecommendation extends AIRecommendation {
   type: 'pricing';
   data: {
     materialId: string;
+    materialName: string;
     currentPrice: number;
     recommendedPrice: number;
     marketTrend: 'rising' | 'falling' | 'stable';
@@ -163,6 +164,7 @@ class AIService {
         impact: Math.abs(recommendedPrice - material.unitCost) > 1 ? 'high' : 'low',
         data: {
           materialId: material.id,
+          materialName: material.name,
           currentPrice: material.unitCost,
           recommendedPrice,
           marketTrend,
@@ -240,12 +242,12 @@ class AIService {
     return 'optimal';
   }
   
-  private calculateCostSavings(material: Material, requirements: any): number {
+  private calculateCostSavings(_material: Material, _requirements: any): number {
     // Simulate cost savings calculation
     return Math.random() * 20 + 5; // $5-$25 savings
   }
   
-  private generateRecommendationReason(material: Material, requirements: any): string {
+  private generateRecommendationReason(_material: Material, _requirements: any): string {
     const reasons = [
       'Best cost-to-stock ratio for your needs',
       'Optimal material type for this application',
@@ -255,15 +257,15 @@ class AIService {
     return reasons[Math.floor(Math.random() * reasons.length)];
   }
   
-  private analyzeMarketTrend(material: Material): 'rising' | 'falling' | 'stable' {
+  private analyzeMarketTrend(_material: Material): 'rising' | 'falling' | 'stable' {
     // Simulate market trend analysis
     const trends: ('rising' | 'falling' | 'stable')[] = ['rising', 'falling', 'stable'];
     return trends[Math.floor(Math.random() * trends.length)];
   }
   
-  private simulateCompetitorAnalysis(material: Material): { average: number; range: [number, number] } {
+  private simulateCompetitorAnalysis(_material: Material): { average: number; range: [number, number] } {
     // Simulate competitor pricing data
-    const basePrice = material.unitCost;
+    const basePrice = _material.unitCost;
     const variance = basePrice * 0.15; // 15% variance
     const min = basePrice - variance;
     const max = basePrice + variance;

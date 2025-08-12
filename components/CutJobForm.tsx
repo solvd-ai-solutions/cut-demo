@@ -80,7 +80,7 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
         ? lengthNum * 0.3048
         : lengthNum * 3.28084;
     
-    return getStockStatus(selectedMaterial, finalLength * quantityNum);
+    return getStockStatus(selectedMaterial.currentStock, selectedMaterial.reorderThreshold, finalLength, quantityNum);
   }, [selectedMaterial, length, quantity, measurementUnit]);
 
   const parseLengthInput = useCallback((input: string): number => {
@@ -121,10 +121,22 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
       const currentLength = parseLengthInput(length);
       if (newUnit === 'imperial') {
         // Convert from metric to imperial
-        setLength(measurementUtils.cmToMetersCm(currentLength * 100).replace('m', 'ft').replace('cm', '"'));
+        const { feet, inches } = measurementUtils.inchesToFeetInches(currentLength * 3.28084 * 12);
+        if (feet === 0) {
+          setLength(`${inches}"`);
+        } else if (inches === 0) {
+          setLength(`${feet}'`);
+        } else {
+          setLength(`${feet}' ${inches}"`);
+        }
       } else {
         // Convert from imperial to metric
-        setLength(measurementUtils.inchesToFeetInches(currentLength * 12).replace('ft', 'm').replace('"', 'cm'));
+        const { meters, cm } = measurementUtils.cmToMetersCm(currentLength * 0.3048 * 100);
+        if (cm === 0) {
+          setLength(`${meters}m`);
+        } else {
+          setLength(`${meters}m ${cm}cm`);
+        }
       }
     }
     
@@ -203,7 +215,6 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
       };
       
       // Save job
-      const existingJobs = dataStore.getJobs();
       dataStore.saveJob(newJob);
       
       // Update material stock
@@ -578,8 +589,17 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                     <span className="solv-small text-solv-black/60">Current Stock:</span>
                     <div className="solv-body font-semibold text-solv-black">
                       {selectedMaterial.measurementUnit === 'imperial' 
-                        ? measurementUtils.inchesToFeetInches(selectedMaterial.currentStock * 12)
-                        : measurementUtils.cmToMetersCm(selectedMaterial.currentStock * 100)
+                        ? (() => {
+                            const { feet, inches } = measurementUtils.inchesToFeetInches(selectedMaterial.currentStock * 12);
+                            if (feet === 0) return `${inches}"`;
+                            if (inches === 0) return `${feet}'`;
+                            return `${feet}' ${inches}"`;
+                          })()
+                        : (() => {
+                            const { meters, cm } = measurementUtils.cmToMetersCm(selectedMaterial.currentStock * 100);
+                            if (cm === 0) return `${meters}m`;
+                            return `${meters}m ${cm}cm`;
+                          })()
                       }
                     </div>
                   </div>
@@ -591,9 +611,9 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
             {stockStatus && (
               <div className={cn(
                 "solv-card",
-                stockStatus.status === 'critical' && "border-red-300 bg-red-50",
+                stockStatus.status === 'insufficient' && "border-red-300 bg-red-50",
                 stockStatus.status === 'low' && "border-yellow-300 bg-yellow-50",
-                stockStatus.status === 'good' && "border-green-300 bg-green-50"
+                stockStatus.status === 'sufficient' && "border-green-300 bg-green-50"
               )}>
                 <h3 className="solv-h3 text-solv-black mb-4 flex items-center gap-2">
                   <Package className="h-5 w-5" />
@@ -605,11 +625,11 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                     <span className="solv-body text-solv-black/70">Status:</span>
                     <span className={cn(
                       "solv-badge",
-                      stockStatus.status === 'critical' && "bg-red-100 text-red-800 border-red-300",
+                      stockStatus.status === 'insufficient' && "bg-red-100 text-red-800 border-red-300",
                       stockStatus.status === 'low' && "bg-yellow-100 text-yellow-800 border-yellow-300",
-                      stockStatus.status === 'good' && "bg-green-100 text-green-800 border-green-300"
+                      stockStatus.status === 'sufficient' && "bg-green-100 text-green-800 border-green-300"
                     )}>
-                      {stockStatus.status === 'critical' ? 'Critical' : 
+                      {stockStatus.status === 'insufficient' ? 'Critical' : 
                        stockStatus.status === 'low' ? 'Low' : 'Good'}
                     </span>
                   </div>
@@ -617,17 +637,14 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                   <div className="flex justify-between">
                     <span className="solv-body text-solv-black/70">Available:</span>
                     <span className="solv-body font-semibold text-solv-black">
-                      {stockStatus.available.toFixed(2)} {selectedMaterial?.measurementUnit === 'imperial' ? 'ft' : 'm'}
+                      {selectedMaterial?.currentStock.toFixed(2)} {selectedMaterial?.measurementUnit === 'imperial' ? 'ft' : 'm'}
                     </span>
                   </div>
                   
-                  {stockStatus.status !== 'good' && (
+                  {stockStatus.status !== 'sufficient' && (
                     <div className="mt-3 p-3 bg-solv-black/5 rounded-lg">
                       <p className="solv-small text-solv-black/70">
-                        {stockStatus.status === 'critical' 
-                          ? '⚠️ Critical stock level. Consider reordering soon.'
-                          : '⚠️ Stock is getting low. Monitor closely.'
-                        }
+                        {stockStatus.message}
                       </p>
                     </div>
                   )}

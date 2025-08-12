@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Brain, X, Bot, User, Sparkles, TrendingUp, Package, DollarSign, Clock, AlertTriangle } from 'lucide-react';
+import { Send, Brain, X, Bot, User } from 'lucide-react';
 import { aiService } from '../services/aiService';
 import { Material, CutJob } from '../types';
-import { cn, formatCurrency } from '../utils';
+import { cn } from '../utils';
 
 interface AIAssistantProps {
   materials: Material[];

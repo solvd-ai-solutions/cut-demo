@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Brain, Package, CheckCircle, TrendingUp, AlertTriangle } from 'lucide-react';
 import { aiService, AIMaterialRecommendation } from '../services/aiService';
 import { Material } from '../types';
-import { cn, formatCurrency } from '../utils';
+import { cn } from '../utils';
 
 interface AIMaterialRecommendationsProps {
   jobRequirements: {
@@ -63,7 +63,7 @@ export default function AIMaterialRecommendations({
       </div>
       
       <div className="space-y-3">
-        {recommendations.map((rec, index) => (
+        {recommendations.map((rec) => (
           <div 
             key={rec.data.recommendedMaterial.id}
             className={cn(

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { CutJobForm } from './components/CutJobForm';
 import { JobManager } from './components/JobManager';
 import { InventoryManager } from './components/InventoryManager';
 import { CutJob } from './types';
-import { Scissors, Package, Eye, Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
 
 type AppView = 'dashboard' | 'new-job' | 'job-manager' | 'inventory';
 
