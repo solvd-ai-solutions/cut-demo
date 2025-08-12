@@ -168,7 +168,7 @@
   }
 
   body {
-    @apply bg-white text-black font-inter;
+    @apply bg-white text-black font-sans;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -182,12 +182,12 @@
 
   /* Focus styles for accessibility */
   *:focus-visible {
-    @apply outline-none ring-2 ring-solv-teal ring-offset-2;
+    @apply outline-none ring-2 ring-mint-500 ring-offset-2;
   }
 
   /* Skip link for accessibility */
   .skip-link {
-    @apply absolute -top-10 left-6 bg-solv-teal text-white px-4 py-2 rounded z-50;
+    @apply absolute -top-10 left-6 bg-mint-500 text-white px-4 py-2 rounded z-50;
     transition: top 0.3s ease;
   }
 
@@ -199,35 +199,35 @@
 /* Solv Solutions Typography */
 @layer base {
   .solv-h1 {
-    @apply text-solv-h1 font-semibold text-solv-black leading-tight;
+    @apply text-2xl font-semibold text-solv-black leading-tight;
   }
   
   .solv-h2 {
-    @apply text-solv-h2 font-semibold text-solv-black leading-tight;
+    @apply text-xl font-semibold text-solv-black leading-tight;
   }
   
   .solv-body {
-    @apply text-solv-body font-normal text-solv-black leading-relaxed;
+    @apply text-base font-normal text-solv-black leading-relaxed;
   }
   
   .solv-small {
-    @apply text-solv-small font-normal text-solv-black leading-tight;
+    @apply text-sm font-normal text-solv-black leading-tight;
   }
 }
 
 /* Solv Solutions Components */
 @layer components {
   .solv-card {
-    @apply bg-white border-2 border-solv-black rounded-solv p-solv-container shadow-solv;
+    @apply bg-white border-2 border-solv-black rounded-lg p-6 shadow-md;
     transition: all 0.2s ease-in-out;
   }
   
   .solv-card:hover {
-    @apply shadow-solv-lg;
+    @apply shadow-lg;
   }
   
   .solv-button-primary {
-    @apply bg-solv-teal text-white border-none rounded-solv px-4 py-2 text-solv-body font-semibold cursor-pointer;
+    @apply bg-mint-500 text-white border-none rounded-lg px-4 py-2 text-base font-semibold cursor-pointer;
     transition: all 0.2s ease-in-out;
     position: relative;
     overflow: hidden;
@@ -243,7 +243,7 @@
   }
   
   .solv-button-primary:hover {
-    @apply bg-solv-teal/90 transform scale-105;
+    @apply bg-mint-600 transform scale-105;
   }
   
   .solv-button-primary:active {
@@ -259,12 +259,12 @@
   }
   
   .solv-button-secondary {
-    @apply bg-transparent text-solv-black border-2 border-solv-coral rounded-solv px-4 py-2 text-solv-body font-semibold cursor-pointer;
+    @apply bg-transparent text-solv-black border-2 border-coral-500 rounded-lg px-4 py-2 text-base font-semibold cursor-pointer;
     transition: all 0.2s ease-in-out;
   }
   
   .solv-button-secondary:hover {
-    @apply bg-solv-coral/10 border-solv-coral/80;
+    @apply bg-coral-50 border-coral-600;
   }
   
   .solv-button-secondary:active {
@@ -272,20 +272,16 @@
   }
   
   .solv-button-secondary:disabled {
-    @apply opacity-50 cursor-not-allowed;
+    @apply opacity-50 cursor-not-allowed transform-none;
   }
   
   .solv-input {
-    @apply bg-white border-2 border-solv-black rounded-solv px-3 py-2 text-solv-body text-solv-black w-full;
+    @apply bg-white border-2 border-solv-black rounded-lg px-3 py-2 text-base text-solv-black w-full;
     transition: all 0.2s ease-in-out;
   }
   
   .solv-input:focus {
-    @apply outline-none border-solv-teal ring-2 ring-solv-teal/20;
-  }
-  
-  .solv-input:hover {
-    @apply border-solv-black/80;
+    @apply outline-none border-mint-500 ring-2 ring-mint-500/20;
   }
   
   .solv-input::placeholder {
@@ -293,48 +289,39 @@
   }
   
   .solv-input:disabled {
-    @apply bg-gray-100 cursor-not-allowed;
-  }
-  
-  .solv-select {
-    @apply solv-input appearance-none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-    padding-right: 2.5rem;
+    @apply bg-solv-gray-100 cursor-not-allowed;
   }
   
   .solv-status-success {
-    @apply bg-solv-teal/10 border-2 border-solv-black text-solv-black p-3 rounded-solv;
+    @apply bg-mint-50 border-2 border-solv-black text-solv-black p-3 rounded-lg;
   }
   
   .solv-status-warning {
-    @apply bg-solv-coral/10 border-2 border-solv-black text-solv-black p-3 rounded-solv;
+    @apply bg-coral-50 border-2 border-solv-black text-solv-black p-3 rounded-lg;
   }
   
   .solv-status-info {
-    @apply bg-solv-lavender/10 border-2 border-solv-black text-solv-black p-3 rounded-solv;
+    @apply bg-lavender-50 border-2 border-solv-black text-solv-black p-3 rounded-lg;
   }
   
   .solv-status-danger {
-    @apply bg-solv-coral/20 border-2 border-solv-black text-solv-black p-3 rounded-solv;
+    @apply bg-coral-100 border-2 border-solv-black text-solv-black p-3 rounded-lg;
   }
   
   .solv-badge {
-    @apply bg-solv-lavender text-solv-black border border-solv-black rounded px-2 py-1 text-solv-small font-semibold inline-block;
+    @apply bg-lavender-100 text-solv-black border border-solv-black rounded px-2 py-1 text-sm font-semibold inline-block;
   }
   
   .solv-badge-success {
-    @apply bg-solv-teal/30 text-solv-black;
+    @apply bg-mint-200 text-solv-black;
   }
   
   .solv-badge-warning {
-    @apply bg-solv-coral/30 text-solv-black;
+    @apply bg-coral-200 text-solv-black;
   }
   
   .solv-badge-danger {
-    @apply bg-solv-coral/50 text-solv-black;
+    @apply bg-coral-300 text-solv-black;
   }
 }
 
