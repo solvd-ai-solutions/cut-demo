@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Brain, Package, CheckCircle, TrendingUp, AlertTriangle } from 'lucide-react';
 import { aiService, AIMaterialRecommendation } from '../services/aiService';
 import { Material } from '../types';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Brain, TrendingUp, Package, DollarSign, AlertTriangle, CheckCircle, BarChart3, Zap, Target, Clock } from 'lucide-react';
 import { aiService, AIDemandForecast, AIPricingRecommendation, AIJobOptimization } from '../services/aiService';
 import { Material, CutJob } from '../types';

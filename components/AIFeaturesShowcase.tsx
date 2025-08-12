@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Brain, Zap, Target, TrendingUp, MessageSquare, Camera, X, CheckCircle, Package } from 'lucide-react';
 import { cn } from '../utils';
 
