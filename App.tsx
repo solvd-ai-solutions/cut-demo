@@ -64,8 +64,8 @@ function App() {
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-solv-black">Cut & Order Manager</h1>
-                <p className="text-sm text-solv-black/60">AI-Powered Business Intelligence</p>
+                <h1 className="text-xl font-bold text-solv-black">AI-Powered Cut & Order Manager</h1>
+                <p className="text-sm text-solv-black/60">Intelligent Business Intelligence Platform</p>
               </div>
             </div>
             
@@ -115,12 +115,12 @@ function App() {
           </div>
         </div>
       </header>
-
+      
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         {renderView()}
       </main>
-
+      
       {/* Footer */}
       <footer className="bg-white border-t border-solv-gray-200 mt-16">
         <div className="max-w-7xl mx-auto px-4 py-6">
