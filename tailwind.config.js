@@ -2,62 +2,99 @@
 export default {
   content: [
     "./index.html",
-    "./**/*.{js,ts,jsx,tsx}",
-    "!./node_modules/**/*",
-    "!./dist/**/*"
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  exclude: ['node_modules', 'dist'],
   theme: {
     extend: {
       colors: {
-        'solv-black': '#000000',
-        'solv-white': '#FFFFFF',
-        'solv-teal': '#4FB3A6',
-        'solv-coral': '#F29E8E',
-        'solv-lavender': '#C5A3E0',
+        // Brand Colors - Only Three Colors as Specified
+        mint: {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+        },
+        lavender: {
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#a855f7',
+          600: '#9333ea',
+          700: '#7c3aed',
+          800: '#6b21a8',
+          900: '#581c87',
+        },
+        coral: {
+          50: '#fff7ed',
+          100: '#ffedd5',
+          200: '#fed7aa',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+          700: '#c2410c',
+          800: '#9a3412',
+          900: '#7c2d12',
+        },
+        // Solv Design System Colors
+        solv: {
+          black: '#1a1a1a',
+          'gray-50': '#f9fafb',
+          'gray-100': '#f3f4f6',
+          'gray-200': '#e5e7eb',
+          'gray-300': '#d1d5db',
+          'gray-400': '#9ca3af',
+          'gray-500': '#6b7280',
+          'gray-600': '#4b5563',
+          'gray-700': '#374151',
+          'gray-800': '#1f2937',
+          'gray-900': '#111827',
+          blue: '#16a34a', // Now uses mint-600
+          'blue-dark': '#15803d', // Now uses mint-700
+          teal: '#22c55e', // Now uses mint-500
+          lavender: '#a855f7', // Now uses lavender-500
+          coral: '#f97316', // Now uses coral-500
+        }
       },
       fontFamily: {
-        'inter': ['Inter', 'Helvetica Neue', 'sans-serif'],
-      },
-      fontSize: {
-        'solv-h1': ['28px', '36px'],
-        'solv-h2': ['20px', '28px'],
-        'solv-body': ['16px', '24px'],
-        'solv-small': ['14px', '20px'],
+        'solv': ['Inter', 'sans-serif'],
       },
       spacing: {
-        'solv-container': '24px',
-        'solv-component': '16px',
-        'solv-grid': '16px',
+        'solv-xs': '0.25rem',
+        'solv-sm': '0.5rem',
+        'solv-md': '1rem',
+        'solv-lg': '1.5rem',
+        'solv-xl': '2rem',
+        'solv-2xl': '3rem',
+        'solv-3xl': '4rem',
       },
       borderRadius: {
-        'solv': '8px',
-      },
-      borderWidth: {
-        'solv': '2px',
+        'solv': '0.5rem',
+        'solv-lg': '0.75rem',
+        'solv-xl': '1rem',
       },
       boxShadow: {
-        'solv': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'solv-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'solv': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+        'solv-lg': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'bounce-gentle': 'bounceGentle 0.6s ease-in-out',
+        'hover-scale': 'hover-scale 0.2s ease-in-out',
       },
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-        bounceGentle: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-5px)' },
-        },
-      },
+        'hover-scale': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.02)' },
+        }
+      }
     },
   },
   plugins: [],

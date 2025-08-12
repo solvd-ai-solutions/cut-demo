@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,29 +7,96 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Solv Solutions Design Tokens */
-  --solv-black: #000000;
-  --solv-white: #FFFFFF;
-  --solv-teal: #4FB3A6;
-  --solv-coral: #F29E8E;
-  --solv-lavender: #C5A3E0;
+  /* Brand Colors - Only Three Colors as Specified */
+  --mint-50: #f0fdf4;
+  --mint-100: #dcfce7;
+  --mint-200: #bbf7d0;
+  --mint-300: #86efac;
+  --mint-400: #4ade80;
+  --mint-500: #22c55e;
+  --mint-600: #16a34a;
+  --mint-700: #15803d;
+  --mint-800: #166534;
+  --mint-900: #14532d;
+  
+  --lavender-50: #faf5ff;
+  --lavender-100: #f3e8ff;
+  --lavender-200: #e9d5ff;
+  --lavender-300: #d8b4fe;
+  --lavender-400: #c084fc;
+  --lavender-500: #a855f7;
+  --lavender-600: #9333ea;
+  --lavender-700: #7c3aed;
+  --lavender-800: #6b21a8;
+  --lavender-900: #581c87;
+  
+  --coral-50: #fff7ed;
+  --coral-100: #ffedd5;
+  --coral-200: #fed7aa;
+  --coral-300: #fdba74;
+  --coral-400: #fb923c;
+  --coral-500: #f97316;
+  --coral-600: #ea580c;
+  --coral-700: #c2410c;
+  --coral-800: #9a3412;
+  --coral-900: #7c2d12;
+
+  /* Solv Design System - Updated to use brand colors */
+  --solv-black: #1a1a1a;
+  --solv-gray-50: #f9fafb;
+  --solv-gray-100: #f3f4f6;
+  --solv-gray-200: #e5e7eb;
+  --solv-gray-300: #d1d5db;
+  --solv-gray-400: #9ca3af;
+  --solv-gray-500: #6b7280;
+  --solv-gray-600: #4b5563;
+  --solv-gray-700: #374151;
+  --solv-gray-800: #1f2937;
+  --solv-gray-900: #111827;
+  
+  /* Primary colors now use brand colors */
+  --solv-blue: var(--mint-600);
+  --solv-blue-dark: var(--mint-700);
+  --solv-teal: var(--mint-500);
+  --solv-lavender: var(--lavender-500);
+  --solv-coral: var(--coral-500);
   
   /* Typography */
-  --solv-h1-size: 28px;
-  --solv-h1-height: 36px;
-  --solv-h2-size: 20px;
-  --solv-h2-height: 28px;
-  --solv-body-size: 16px;
-  --solv-body-height: 24px;
-  --solv-small-size: 14px;
-  --solv-small-height: 20px;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
   /* Spacing */
-  --solv-container-padding: 24px;
-  --solv-component-spacing: 16px;
-  --solv-grid-gap: 16px;
-  --solv-border-radius: 8px;
-  --solv-border-width: 2px;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Border Width */
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --border-width-lg: 3px;
+  
+  /* Box Shadow */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  
+  /* Animation */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
   
   /* Original tokens for compatibility */
   --font-size: 14px;

@@ -48,171 +48,171 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
 
   return (
     <div className="space-y-8">
-      {/* AI-Powered Header */}
-      <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 rounded-xl p-8">
+      {/* AI-Powered Header - Mint to Lavender gradient */}
+      <div className="bg-gradient-to-r from-mint-50 via-lavender-50 to-mint-100 border border-mint-200 rounded-xl p-8">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-mint-400 to-lavender-500 rounded-full mb-6">
             <Brain className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-blue-900 mb-4">
+          <h1 className="text-4xl font-bold text-mint-900 mb-4">
             AI-Powered Cut & Order Manager
           </h1>
-          <p className="text-xl text-blue-800 max-w-3xl mx-auto">
+          <p className="text-xl text-mint-800 max-w-3xl mx-auto">
             Transform your cutting business with intelligent AI solutions that provide real-time insights, 
             optimize operations, and drive profitability through data-driven decision making.
           </p>
           <div className="flex items-center justify-center gap-4 mt-6">
             <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full">
-              <Sparkles className="w-5 h-5 text-purple-600" />
-              <span className="text-blue-900 font-medium">Smart Analytics</span>
+              <Sparkles className="w-5 h-5 text-lavender-500" />
+              <span className="text-mint-900 font-medium">Smart Analytics</span>
             </div>
             <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full">
-              <Zap className="w-5 h-5 text-yellow-600" />
-              <span className="text-blue-900 font-medium">Process Optimization</span>
+              <Zap className="w-5 h-5 text-coral-500" />
+              <span className="text-mint-900 font-medium">Process Optimization</span>
             </div>
             <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full">
-              <Target className="w-5 h-5 text-red-600" />
-              <span className="text-blue-900 font-medium">Strategic Insights</span>
+              <Target className="w-5 h-5 text-mint-600" />
+              <span className="text-mint-900 font-medium">Strategic Insights</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* AI-Powered Business Intelligence Grid */}
+      {/* AI-Powered Business Intelligence Grid - Mint, Lavender, Coral */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* AI Demand Forecasting */}
-        <div className="solv-card bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
+        {/* AI Demand Forecasting - Mint */}
+        <div className="solv-card bg-gradient-to-br from-mint-50 to-mint-100 border-mint-200">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <TrendingUp className="h-6 w-6 text-purple-600" />
+            <div className="p-3 bg-mint-100 rounded-lg">
+              <TrendingUp className="h-6 w-6 text-mint-600" />
             </div>
             <div>
-              <h3 className="solv-h3 text-purple-900">AI Demand Forecasting</h3>
-              <p className="solv-small text-purple-700">Predict future demand patterns</p>
+              <h3 className="solv-h3 text-mint-900">AI Demand Forecasting</h3>
+              <p className="solv-small text-mint-700">Predict future demand patterns</p>
             </div>
           </div>
           
           {isLoadingAI ? (
             <div className="text-center py-6">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
-              <p className="text-sm text-purple-600">AI analyzing...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mint-600 mx-auto mb-2"></div>
+              <p className="text-sm text-mint-600">AI analyzing...</p>
             </div>
           ) : aiInsights?.forecasts?.length > 0 ? (
             <div className="space-y-3">
               {aiInsights.forecasts.slice(0, 2).map((forecast: any) => (
-                <div key={forecast.data.materialId} className="bg-white/60 rounded-lg p-3 border border-purple-200">
+                <div key={forecast.data.materialId} className="bg-white/60 rounded-lg p-3 border border-mint-200">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-purple-900">{forecast.data.materialName}</span>
+                    <span className="font-medium text-mint-900">{forecast.data.materialName}</span>
                     <span className={cn(
                       "px-2 py-1 rounded-full text-xs font-medium",
-                      forecast.impact === 'high' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
+                      forecast.impact === 'high' ? 'bg-coral-100 text-coral-800' : 'bg-lavender-100 text-lavender-800'
                     )}>
                       {forecast.impact} priority
                     </span>
                   </div>
-                  <p className="text-sm text-purple-700">
+                  <p className="text-sm text-mint-700">
                     Predicted: {forecast.data.predictedDemand.toFixed(1)} {forecast.data.timeframe === 'month' ? 'per month' : 'per week'}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center py-6 text-purple-600">No demand data available yet</p>
+            <div className="text-center py-6 text-mint-600">No demand data available yet</div>
           )}
         </div>
 
-        {/* AI Pricing Intelligence */}
-        <div className="solv-card bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+        {/* AI Pricing Intelligence - Lavender */}
+        <div className="solv-card bg-gradient-to-br from-lavender-50 to-lavender-100 border-lavender-200">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Target className="h-6 w-6 text-green-600" />
+            <div className="p-3 bg-lavender-100 rounded-lg">
+              <Target className="h-6 w-6 text-lavender-600" />
             </div>
             <div>
-              <h3 className="solv-h3 text-green-900">AI Pricing Intelligence</h3>
-              <p className="solv-small text-green-700">Smart pricing recommendations</p>
+              <h3 className="solv-h3 text-lavender-900">AI Pricing Intelligence</h3>
+              <p className="solv-small text-lavender-700">Smart pricing recommendations</p>
             </div>
           </div>
           
           {isLoadingAI ? (
             <div className="text-center py-6">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
-              <p className="text-sm text-green-600">AI analyzing...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-lavender-600 mx-auto mb-2"></div>
+              <p className="text-sm text-lavender-600">AI analyzing...</p>
             </div>
           ) : aiInsights?.pricing?.length > 0 ? (
             <div className="space-y-3">
               {aiInsights.pricing.slice(0, 2).map((pricing: any) => (
-                <div key={pricing.data.materialId} className="bg-white/60 rounded-lg p-3 border border-green-200">
+                <div key={pricing.data.materialId} className="bg-white/60 rounded-lg p-3 border border-lavender-200">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-green-900">{pricing.data.materialName}</span>
+                    <span className="font-medium text-lavender-900">{pricing.data.materialName}</span>
                     <span className={cn(
                       "px-2 py-1 rounded-full text-xs font-medium",
-                      pricing.data.marketTrend === 'rising' ? 'bg-red-100 text-red-800' :
-                      pricing.data.marketTrend === 'falling' ? 'bg-green-100 text-green-800' :
-                      'bg-blue-100 text-blue-800'
+                      pricing.data.marketTrend === 'rising' ? 'bg-coral-100 text-coral-800' :
+                      pricing.data.marketTrend === 'falling' ? 'bg-mint-100 text-mint-800' :
+                      'bg-lavender-100 text-lavender-800'
                     )}>
                       {pricing.data.marketTrend} market
                     </span>
                   </div>
-                  <p className="text-sm text-green-700">
+                  <p className="text-sm text-lavender-700">
                     ${pricing.data.currentPrice.toFixed(2)} → ${pricing.data.recommendedPrice.toFixed(2)}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center py-6 text-green-600">No pricing data available yet</p>
+            <div className="text-center py-6 text-lavender-600">No pricing data available yet</div>
           )}
         </div>
 
-        {/* AI Job Optimization */}
-        <div className="solv-card bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200">
+        {/* AI Job Optimization - Coral */}
+        <div className="solv-card bg-gradient-to-br from-coral-50 to-coral-100 border-coral-200">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <Zap className="h-6 w-6 text-yellow-600" />
+            <div className="p-3 bg-coral-100 rounded-lg">
+              <Zap className="h-6 w-6 text-coral-600" />
             </div>
             <div>
-              <h3 className="solv-h3 text-yellow-900">AI Job Optimization</h3>
-              <p className="solv-small text-yellow-700">Optimize cutting operations</p>
+              <h3 className="solv-h3 text-coral-900">AI Job Optimization</h3>
+              <p className="solv-small text-coral-700">Optimize cutting operations</p>
             </div>
           </div>
           
           {isLoadingAI ? (
             <div className="text-center py-6">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-2"></div>
-              <p className="text-sm text-yellow-600">AI analyzing...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coral-600 mx-auto mb-2"></div>
+              <p className="text-sm text-coral-600">AI analyzing...</p>
             </div>
           ) : aiInsights?.optimizations?.length > 0 ? (
             <div className="space-y-3">
               {aiInsights.optimizations.slice(0, 2).map((optimization: any) => (
-                <div key={optimization.data.jobId} className="bg-white/60 rounded-lg p-3 border border-yellow-200">
+                <div key={optimization.data.jobId} className="bg-white/60 rounded-lg p-3 border border-coral-200">
                   <div className="mb-2">
-                    <span className="font-medium text-yellow-900">{optimization.title}</span>
+                    <span className="font-medium text-coral-900">{optimization.title}</span>
                   </div>
-                  <p className="text-sm text-yellow-700 mb-2">{optimization.description}</p>
+                  <p className="text-sm text-coral-700 mb-2">{optimization.description}</p>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-yellow-600">Save ${optimization.data.costSavings.toFixed(2)}</span>
-                    <span className="text-yellow-600">{optimization.data.estimatedTimeSavings}h saved</span>
+                    <span className="text-coral-600">Save ${optimization.data.costSavings.toFixed(2)}</span>
+                    <span className="text-coral-600">{optimization.data.estimatedTimeSavings}h saved</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center py-6 text-yellow-600">No optimization data available yet</p>
+            <div className="text-center py-6 text-coral-600">No optimization data available yet</div>
           )}
         </div>
       </div>
 
-      {/* Quick Actions with AI Enhancement */}
+      {/* Quick Actions with AI Enhancement - Mint, Lavender, Coral */}
       <div className="solv-card">
         <h2 className="solv-h2 text-solv-black mb-6 flex items-center gap-3">
-          <Brain className="h-6 w-6 text-solv-teal" />
+          <Brain className="h-6 w-6 text-mint-600" />
           AI-Enhanced Quick Actions
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <button
             onClick={onNewJob}
-            className="group relative overflow-hidden bg-gradient-to-r from-solv-blue to-solv-teal text-white p-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            className="group relative overflow-hidden bg-gradient-to-r from-mint-400 to-mint-500 text-white p-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
           >
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
             <div className="relative">
@@ -228,7 +228,7 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
 
           <button
             onClick={onManageInventory}
-            className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            className="group relative overflow-hidden bg-gradient-to-r from-lavender-400 to-lavender-500 text-white p-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
           >
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
             <div className="relative">
@@ -244,7 +244,7 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
 
           <button
             onClick={onViewJobs}
-            className="group relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-600 text-white p-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+            className="group relative overflow-hidden bg-gradient-to-r from-coral-400 to-coral-500 text-white p-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
           >
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
             <div className="relative">
@@ -260,66 +260,66 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
         </div>
       </div>
 
-      {/* AI Business Metrics */}
+      {/* AI Business Metrics - Mint, Lavender, Coral */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="solv-card bg-gradient-to-br from-green-50 to-emerald-100 border-green-300">
+        <div className="solv-card bg-gradient-to-br from-mint-50 to-mint-100 border-mint-300">
           <div className="text-center p-6">
-            <div className="mx-auto w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-3">
+            <div className="mx-auto w-12 h-12 bg-mint-500 rounded-full flex items-center justify-center mb-3">
               <TrendingUp className="h-6 w-6 text-white" />
             </div>
-            <div className="text-3xl font-bold text-green-700 mb-1">
+            <div className="text-3xl font-bold text-mint-700 mb-1">
               ${totalRevenue.toFixed(0)}
             </div>
-            <p className="solv-body text-green-700">Total Revenue</p>
-            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-green-600">
+            <p className="solv-body text-mint-700">Total Revenue</p>
+            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-mint-600">
               <Brain className="h-4 w-4" />
               <span>AI-tracked</span>
             </div>
           </div>
         </div>
 
-        <div className="solv-card bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-300">
+        <div className="solv-card bg-gradient-to-br from-lavender-50 to-lavender-100 border-lavender-300">
           <div className="text-center p-6">
-            <div className="mx-auto w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-3">
+            <div className="mx-auto w-12 h-12 bg-lavender-500 rounded-full flex items-center justify-center mb-3">
               <Package className="h-6 w-6 text-white" />
             </div>
-            <div className="text-3xl font-bold text-blue-700 mb-1">
+            <div className="text-3xl font-bold text-lavender-700 mb-1">
               {materials.length}
             </div>
-            <p className="solv-body text-blue-700">Materials</p>
-            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-blue-600">
+            <p className="solv-body text-lavender-700">Materials</p>
+            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-lavender-600">
               <Target className="h-4 w-4" />
               <span>AI-optimized</span>
             </div>
           </div>
         </div>
 
-        <div className="solv-card bg-gradient-to-br from-yellow-50 to-orange-100 border-yellow-300">
+        <div className="solv-card bg-gradient-to-br from-coral-50 to-coral-100 border-coral-300">
           <div className="text-center p-6">
-            <div className="mx-auto w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mb-3">
+            <div className="mx-auto w-12 h-12 bg-coral-500 rounded-full flex items-center justify-center mb-3">
               <Clock className="h-6 w-6 text-white" />
             </div>
-            <div className="text-3xl font-bold text-yellow-700 mb-1">
+            <div className="text-3xl font-bold text-coral-700 mb-1">
               {pendingJobs.length}
             </div>
-            <p className="solv-body text-yellow-700">Pending Jobs</p>
-            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-yellow-600">
+            <p className="solv-body text-coral-700">Pending Jobs</p>
+            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-coral-600">
               <Zap className="h-4 w-4" />
               <span>AI-optimized</span>
             </div>
           </div>
         </div>
 
-        <div className="solv-card bg-gradient-to-br from-red-50 to-pink-100 border-red-300">
+        <div className="solv-card bg-gradient-to-br from-coral-50 to-coral-100 border-coral-300">
           <div className="text-center p-6">
-            <div className="mx-auto w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mb-3">
+            <div className="mx-auto w-12 h-12 bg-coral-500 rounded-full flex items-center justify-center mb-3">
               <AlertTriangle className="h-6 w-6 text-white" />
             </div>
-            <div className="text-3xl font-bold text-red-700 mb-1">
+            <div className="text-3xl font-bold text-coral-700 mb-1">
               {reorderAlerts.length}
             </div>
-            <p className="solv-body text-red-700">Low Stock Items</p>
-            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-red-600">
+            <p className="solv-body text-coral-700">Low Stock Items</p>
+            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-coral-600">
               <TrendingUp className="h-4 w-4" />
               <span>AI-predicted</span>
             </div>
@@ -327,33 +327,33 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
         </div>
       </div>
 
-      {/* AI Assistant Integration */}
-      <div className="solv-card bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+      {/* AI Assistant Integration - Lavender */}
+      <div className="solv-card bg-gradient-to-r from-lavender-50 to-lavender-100 border-lavender-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-indigo-100 rounded-lg">
-              <MessageSquare className="h-6 w-6 text-indigo-600" />
+            <div className="p-3 bg-lavender-100 rounded-lg">
+              <MessageSquare className="h-6 w-6 text-lavender-600" />
             </div>
             <div>
-              <h3 className="solv-h2 text-indigo-900">AI Business Assistant</h3>
-              <p className="solv-body text-indigo-700">
+              <h3 className="solv-h2 text-lavender-900">AI Business Assistant</h3>
+              <p className="solv-body text-lavender-700">
                 Get instant answers about your business with natural language queries
               </p>
             </div>
           </div>
           <div className="text-right">
-            <div className="solv-badge bg-indigo-100 text-indigo-800 border-indigo-300">
+            <div className="solv-badge bg-lavender-100 text-lavender-800 border-lavender-300">
               Powered by AI
             </div>
           </div>
         </div>
         
-        <div className="mt-6 p-4 bg-white/60 rounded-lg border border-indigo-200">
-          <p className="text-sm text-indigo-700 mb-3">
+        <div className="mt-6 p-4 bg-white/60 rounded-lg border border-lavender-200">
+          <p className="text-sm text-lavender-700 mb-3">
             <strong>Try asking:</strong> "What's my revenue this month?", "Which materials are low in stock?", 
             "How can I optimize my cutting operations?"
           </p>
-          <div className="flex items-center gap-2 text-xs text-indigo-600">
+          <div className="flex items-center gap-2 text-xs text-lavender-600">
             <Brain className="h-4 w-4" />
             <span>AI processes natural language and provides intelligent business insights</span>
           </div>
@@ -363,7 +363,7 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
       {/* Recent Activity with AI Insights */}
       <div className="solv-card">
         <h2 className="solv-h2 text-solv-black mb-6 flex items-center gap-3">
-          <BarChart3 className="h-6 w-6 text-solv-teal" />
+          <BarChart3 className="h-6 w-6 text-mint-600" />
           Recent Activity & AI Insights
         </h2>
         
@@ -396,30 +396,30 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
             <h3 className="solv-h3 text-solv-black mb-4">AI Recommendations</h3>
             {isLoadingAI ? (
               <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-solv-teal mx-auto mb-3"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mint-600 mx-auto mb-3"></div>
                 <p className="text-sm text-solv-black/60">AI analyzing your business...</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {aiInsights?.forecasts?.slice(0, 2).map((forecast: any) => (
-                  <div key={forecast.data.materialId} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div key={forecast.data.materialId} className="p-3 bg-mint-50 border border-mint-200 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="h-4 w-4 text-blue-600" />
-                      <span className="solv-body font-medium text-blue-900">Demand Forecast</span>
+                      <TrendingUp className="h-4 w-4 text-mint-600" />
+                      <span className="solv-body font-medium text-mint-900">Demand Forecast</span>
                     </div>
-                    <p className="solv-small text-blue-700">
+                    <p className="solv-small text-mint-700">
                       {forecast.data.materialName}: {forecast.data.predictedDemand.toFixed(1)} units needed
                     </p>
                   </div>
                 ))}
                 
                 {aiInsights?.optimizations?.slice(0, 1).map((optimization: any) => (
-                  <div key={optimization.data.jobId} className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div key={optimization.data.jobId} className="p-3 bg-coral-50 border border-coral-200 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <Zap className="h-4 w-4 text-yellow-600" />
-                      <span className="solv-body font-medium text-yellow-900">Optimization</span>
+                      <Zap className="h-4 w-4 text-coral-600" />
+                      <span className="solv-body font-medium text-coral-900">Optimization</span>
                     </div>
-                    <p className="solv-small text-yellow-700">
+                    <p className="solv-small text-coral-700">
                       {optimization.description} - Save ${optimization.data.costSavings.toFixed(2)}
                     </p>
                   </div>
