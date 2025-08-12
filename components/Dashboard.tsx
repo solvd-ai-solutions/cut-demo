@@ -49,30 +49,30 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
   return (
     <div className="space-y-8">
       {/* AI-Powered Header - Mint to Lavender gradient */}
-      <div className="bg-gradient-to-r from-mint-50 via-lavender-50 to-mint-100 border border-mint-200 rounded-xl p-8">
+      <div className="solv-card bg-gradient-to-r from-mint-50 via-lavender-50 to-mint-100 border-mint-200">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-mint-400 to-lavender-500 rounded-full mb-6">
             <Brain className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-mint-900 mb-4">
+          <h1 className="solv-h1 text-mint-900 mb-4">
             AI-Powered Cut & Order Manager
           </h1>
-          <p className="text-xl text-mint-800 max-w-3xl mx-auto">
+          <p className="solv-body text-mint-800 max-w-3xl mx-auto">
             Transform your cutting business with intelligent AI solutions that provide real-time insights, 
             optimize operations, and drive profitability through data-driven decision making.
           </p>
           <div className="flex items-center justify-center gap-4 mt-6">
             <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full">
               <Sparkles className="w-5 h-5 text-lavender-500" />
-              <span className="text-mint-900 font-medium">Smart Analytics</span>
+              <span className="solv-body font-medium text-mint-900">Smart Analytics</span>
             </div>
             <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full">
               <Zap className="w-5 h-5 text-coral-500" />
-              <span className="text-mint-900 font-medium">Process Optimization</span>
+              <span className="solv-body font-medium text-mint-900">Process Optimization</span>
             </div>
             <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-full">
               <Target className="w-5 h-5 text-mint-600" />
-              <span className="text-mint-900 font-medium">Strategic Insights</span>
+              <span className="solv-body font-medium text-mint-900">Strategic Insights</span>
             </div>
           </div>
         </div>

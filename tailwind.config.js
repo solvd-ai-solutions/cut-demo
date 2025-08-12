@@ -5,6 +5,25 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   exclude: ['node_modules', 'dist'],
+  safelist: [
+    'solv-card',
+    'solv-h1',
+    'solv-h2', 
+    'solv-h3',
+    'solv-body',
+    'solv-small',
+    'solv-button-primary',
+    'solv-button-secondary',
+    'solv-input',
+    'solv-status-success',
+    'solv-status-warning',
+    'solv-status-info',
+    'solv-status-danger',
+    'solv-badge',
+    'solv-badge-success',
+    'solv-badge-warning',
+    'solv-badge-danger'
+  ],
   theme: {
     extend: {
       colors: {
@@ -68,6 +87,13 @@ export default {
       fontFamily: {
         'solv': ['Inter', 'sans-serif'],
       },
+      fontSize: {
+        'solv-h1': ['2.25rem', { lineHeight: '2.5rem', fontWeight: '700' }],
+        'solv-h2': ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }],
+        'solv-h3': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }],
+        'solv-body': ['1rem', { lineHeight: '1.75rem', fontWeight: '400' }],
+        'solv-small': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '400' }],
+      },
       spacing: {
         'solv-xs': '0.25rem',
         'solv-sm': '0.5rem',
@@ -76,6 +102,7 @@ export default {
         'solv-xl': '2rem',
         'solv-2xl': '3rem',
         'solv-3xl': '4rem',
+        'solv-container': '1.5rem',
       },
       borderRadius: {
         'solv': '0.5rem',
@@ -85,6 +112,7 @@ export default {
       boxShadow: {
         'solv': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
         'solv-lg': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+        'solv-xl': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
       },
       animation: {
         'hover-scale': 'hover-scale 0.2s ease-in-out',

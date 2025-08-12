@@ -101,11 +101,13 @@
 
 @layer base {
   * {
-    @apply border-solv-black;
+    border-color: rgb(26 26 26);
   }
 
   body {
-    @apply bg-white text-black font-sans;
+    background-color: rgb(255 255 255);
+    color: rgb(0 0 0);
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -119,56 +121,100 @@
 
   /* Focus styles for accessibility */
   *:focus-visible {
-    @apply outline-none ring-2 ring-mint-500 ring-offset-2;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) rgb(34 197 94);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    --tw-ring-offset-width: 2px;
   }
 
   /* Skip link for accessibility */
   .skip-link {
-    @apply absolute -top-10 left-6 bg-mint-500 text-white px-4 py-2 rounded z-50;
+    position: absolute;
+    top: -2.5rem;
+    left: 1.5rem;
+    background-color: rgb(34 197 94);
+    color: rgb(255 255 255);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    z-index: 50;
     transition: top 0.3s ease;
   }
 
   .skip-link:focus {
-    @apply top-6;
+    top: 1.5rem;
   }
 }
 
 /* Solv Solutions Typography */
-@layer base {
+@layer components {
   .solv-h1 {
-    @apply text-4xl font-bold text-solv-black leading-tight;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    font-weight: 700;
+    color: rgb(26 26 26);
+    line-height: 1.25;
   }
   
   .solv-h2 {
-    @apply text-2xl font-semibold text-solv-black leading-tight;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 600;
+    color: rgb(26 26 26);
+    line-height: 1.25;
   }
   
   .solv-h3 {
-    @apply text-xl font-semibold text-solv-black leading-tight;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    color: rgb(26 26 26);
+    line-height: 1.25;
   }
   
   .solv-body {
-    @apply text-base font-normal text-solv-black leading-relaxed;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    font-weight: 400;
+    color: rgb(26 26 26);
+    line-height: 1.625;
   }
   
   .solv-small {
-    @apply text-sm font-normal text-solv-black leading-tight;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 400;
+    color: rgb(26 26 26);
+    line-height: 1.25;
   }
 }
 
 /* Solv Solutions Components */
 @layer components {
   .solv-card {
-    @apply bg-white border-2 border-solv-black rounded-xl p-6 shadow-lg;
+    background-color: rgb(255 255 255);
+    border: 2px solid rgb(26 26 26);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     transition: all 0.2s ease-in-out;
   }
   
   .solv-card:hover {
-    @apply shadow-xl transform scale-[1.02];
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    transform: scale(1.02);
   }
   
   .solv-button-primary {
-    @apply bg-mint-500 text-white border-none rounded-lg px-6 py-3 text-base font-semibold cursor-pointer;
+    background-color: rgb(34 197 94);
+    color: rgb(255 255 255);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
     transition: all 0.2s ease-in-out;
     position: relative;
     overflow: hidden;
@@ -176,93 +222,148 @@
   
   .solv-button-primary::before {
     content: '';
-    @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-200;
+    position: absolute;
+    inset: 0;
+    background-color: rgb(255 255 255);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
   }
   
   .solv-button-primary:hover::before {
-    @apply opacity-20;
+    opacity: 0.2;
   }
   
   .solv-button-primary:hover {
-    @apply bg-mint-600 transform scale-105 shadow-lg;
+    background-color: rgb(22 163 74);
+    transform: scale(1.05);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   }
   
   .solv-button-primary:active {
-    @apply transform scale-95;
+    transform: scale(0.95);
   }
   
   .solv-button-primary:disabled {
-    @apply opacity-50 cursor-not-allowed transform-none;
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
   
   .solv-button-primary:disabled::before {
-    @apply opacity-0;
+    opacity: 0;
   }
   
   .solv-button-secondary {
-    @apply bg-transparent text-solv-black border-2 border-coral-500 rounded-lg px-6 py-3 text-base font-semibold cursor-pointer;
+    background-color: transparent;
+    color: rgb(26 26 26);
+    border: 2px solid rgb(249 115 22);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
     transition: all 0.2s ease-in-out;
   }
   
   .solv-button-secondary:hover {
-    @apply bg-coral-50 border-coral-600 transform scale-105;
+    background-color: rgb(255 247 237);
+    border-color: rgb(234 88 12);
+    transform: scale(1.05);
   }
   
   .solv-button-secondary:active {
-    @apply transform scale-95;
+    transform: scale(0.95);
   }
   
   .solv-button-secondary:disabled {
-    @apply opacity-50 cursor-not-allowed transform-none;
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
   
   .solv-input {
-    @apply bg-white border-2 border-solv-black rounded-lg px-4 py-3 text-base text-solv-black w-full;
+    background-color: rgb(255 255 255);
+    border: 2px solid rgb(26 26 26);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: rgb(26 26 26);
+    width: 100%;
     transition: all 0.2s ease-in-out;
   }
   
   .solv-input:focus {
-    @apply outline-none border-mint-500 ring-2 ring-mint-500/20 transform scale-[1.02];
+    outline: none;
+    border-color: rgb(34 197 94);
+    box-shadow: 0 0 0 2px rgb(34 197 94 / 0.2);
+    transform: scale(1.02);
   }
   
   .solv-input::placeholder {
-    @apply text-solv-black/50;
+    color: rgb(26 26 26 / 0.5);
   }
   
   .solv-input:disabled {
-    @apply bg-solv-gray-100 cursor-not-allowed;
+    background-color: rgb(243 244 246);
+    cursor: not-allowed;
   }
   
   .solv-status-success {
-    @apply bg-mint-50 border-2 border-mint-200 text-solv-black p-4 rounded-lg;
+    background-color: rgb(240 253 244);
+    border: 2px solid rgb(187 247 208);
+    color: rgb(26 26 26);
+    padding: 1rem;
+    border-radius: 0.5rem;
   }
   
   .solv-status-warning {
-    @apply bg-coral-50 border-2 border-coral-200 text-solv-black p-4 rounded-lg;
+    background-color: rgb(255 247 237);
+    border: 2px solid rgb(254 215 170);
+    color: rgb(26 26 26);
+    padding: 1rem;
+    border-radius: 0.5rem;
   }
   
   .solv-status-info {
-    @apply bg-lavender-50 border-2 border-lavender-200 text-solv-black p-4 rounded-lg;
+    background-color: rgb(250 245 255);
+    border: 2px solid rgb(233 213 255);
+    color: rgb(26 26 26);
+    padding: 1rem;
+    border-radius: 0.5rem;
   }
   
   .solv-status-danger {
-    @apply bg-coral-100 border-2 border-coral-200 text-solv-black p-4 rounded-lg;
+    background-color: rgb(254 226 226);
+    border: 2px solid rgb(254 215 170);
+    color: rgb(26 26 26);
+    padding: 1rem;
+    border-radius: 0.5rem;
   }
   
   .solv-badge {
-    @apply bg-lavender-100 text-solv-black border border-lavender-300 rounded-full px-3 py-1 text-sm font-semibold inline-block;
+    background-color: rgb(250 245 255);
+    color: rgb(26 26 26);
+    border: 1px solid rgb(216 180 254);
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-block;
   }
   
   .solv-badge-success {
-    @apply bg-mint-200 text-solv-black;
+    background-color: rgb(187 247 208);
+    color: rgb(26 26 26);
   }
   
   .solv-badge-warning {
-    @apply bg-coral-200 text-solv-black;
+    background-color: rgb(254 215 170);
+    color: rgb(26 26 26);
   }
   
   .solv-badge-danger {
-    @apply bg-coral-300 text-solv-black;
+    background-color: rgb(253 186 116);
+    color: rgb(26 26 26);
   }
 }
 
