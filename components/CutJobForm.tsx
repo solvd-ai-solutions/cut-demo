@@ -4,6 +4,7 @@ import { dataStore, getUserMeasurementUnit, setUserMeasurementUnit } from '../se
 import { Material, CutJob, MeasurementUnit } from '../types';
 import { cn, formatCurrency, calculateJobCost, getStockStatus, a11y } from '../utils';
 import { measurementUtils } from '../utils';
+import AIMaterialRecommendations from './AIMaterialRecommendations';
 
 interface CutJobFormProps {
   onBack: () => void;
@@ -18,18 +19,70 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
   const [quantity, setQuantity] = useState('1');
   const [notes, setNotes] = useState('');
   const [measurementUnit, setMeasurementUnit] = useState<MeasurementUnit>('imperial');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Generate unique IDs for accessibility
-  const customerNameId = useMemo(() => a11y.generateId('customer-name'), []);
-  const materialId = useMemo(() => a11y.generateId('material'), []);
-  const lengthId = useMemo(() => a11y.generateId('length'), []);
-  const quantityId = useMemo(() => a11y.generateId('quantity'), []);
-  const notesId = useMemo(() => a11y.generateId('notes'), []);
-  const unitId = useMemo(() => a11y.generateId('measurement-unit'), []);
+  const customerNameId = a11y.generateId('customer-name');
+  const materialId = a11y.generateId('material');
+  const lengthId = a11y.generateId('length');
+  const quantityId = a11y.generateId('quantity');
+  const notesId = a11y.generateId('notes');
 
-  // Parse length input based on current unit
+  useEffect(() => {
+    // Load materials and user preferences
+    const allMaterials = dataStore.getMaterials();
+    const userUnit = getUserMeasurementUnit();
+    
+    setMaterials(allMaterials);
+    setMeasurementUnit(userUnit);
+    setIsLoading(false);
+  }, []);
+
+  const selectedMaterial = useMemo(() => {
+    return materials.find(m => m.id === selectedMaterialId) || null;
+  }, [materials, selectedMaterialId]);
+
+  const calculatedCosts = useMemo(() => {
+    if (!selectedMaterial || !length || !quantity) return null;
+    
+    const lengthNum = parseLengthInput(length);
+    const quantityNum = parseInt(quantity);
+    
+    if (isNaN(lengthNum) || isNaN(quantityNum)) return null;
+    
+    // Convert length to material's default unit for calculation
+    const finalLength = measurementUnit === selectedMaterial.measurementUnit 
+      ? lengthNum 
+      : measurementUnit === 'imperial' 
+        ? lengthNum * 0.3048 // feet to meters
+        : lengthNum * 3.28084; // meters to feet
+    
+    const materialCost = finalLength * selectedMaterial.unitCost * quantityNum;
+    const costs = calculateJobCost(materialCost, finalLength, quantityNum);
+    
+    return costs;
+  }, [selectedMaterial, length, quantity, measurementUnit]);
+
+  const stockStatus = useMemo(() => {
+    if (!selectedMaterial) return null;
+    
+    // Convert length to material's default unit for stock check
+    const lengthNum = parseLengthInput(length);
+    const quantityNum = parseInt(quantity);
+    
+    if (isNaN(lengthNum) || isNaN(quantityNum)) return null;
+    
+    const finalLength = measurementUnit === selectedMaterial.measurementUnit 
+      ? lengthNum 
+      : measurementUnit === 'imperial' 
+        ? lengthNum * 0.3048
+        : lengthNum * 3.28084;
+    
+    return getStockStatus(selectedMaterial, finalLength * quantityNum);
+  }, [selectedMaterial, length, quantity, measurementUnit]);
+
   const parseLengthInput = useCallback((input: string): number => {
     if (measurementUnit === 'imperial') {
       return measurementUtils.parseFeetInches(input);
@@ -38,87 +91,59 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
     }
   }, [measurementUnit]);
 
-  useEffect(() => {
-    const allMaterials = dataStore.getMaterials();
-    setMaterials(allMaterials);
-    if (allMaterials.length > 0) {
-      setSelectedMaterialId(allMaterials[0].id);
+  const handleInputChange = (field: string, value: string) => {
+    switch (field) {
+      case 'customerName':
+        setCustomerName(value);
+        break;
+      case 'length':
+        setLength(value);
+        break;
+      case 'quantity':
+        setQuantity(value);
+        break;
+      case 'notes':
+        setNotes(value);
+        break;
     }
     
-    // Load user's preferred measurement unit
-    const userUnit = getUserMeasurementUnit();
-    setMeasurementUnit(userUnit);
-  }, []);
-
-  const selectedMaterial = useMemo(() => 
-    materials.find(m => m.id === selectedMaterialId), 
-    [materials, selectedMaterialId]
-  );
-
-  const calculatedCosts = useMemo(() => {
-    if (!selectedMaterial || !length || !quantity) {
-      return null;
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
     }
+  };
 
-    const lengthNum = parseLengthInput(length);
-    const quantityNum = parseInt(quantity);
+  const handleUnitChange = (newUnit: MeasurementUnit) => {
+    if (newUnit === measurementUnit) return;
     
-    if (isNaN(lengthNum) || isNaN(quantityNum)) {
-      return null;
+    // Convert length value when changing units
+    if (length) {
+      const currentLength = parseLengthInput(length);
+      if (newUnit === 'imperial') {
+        // Convert from metric to imperial
+        setLength(measurementUtils.cmToMetersCm(currentLength * 100).replace('m', 'ft').replace('cm', '"'));
+      } else {
+        // Convert from imperial to metric
+        setLength(measurementUtils.inchesToFeetInches(currentLength * 12).replace('ft', 'm').replace('"', 'cm'));
+      }
     }
-
-    // Convert length to the material's default unit if different
-    let finalLength = lengthNum;
-    if (measurementUnit !== selectedMaterial.measurementUnit) {
-      finalLength = measurementUtils.convertMeasurement(
-        lengthNum, 
-        measurementUnit, 
-        selectedMaterial.measurementUnit
-      );
-    }
-
-    const materialCost = selectedMaterial.unitCost * finalLength * quantityNum;
-    return calculateJobCost(materialCost, finalLength, quantityNum);
-  }, [selectedMaterial, length, quantity, measurementUnit, parseLengthInput]);
-
-  const stockStatus = useMemo(() => {
-    if (!selectedMaterial || !length || !quantity) return null;
     
-    const lengthNum = parseLengthInput(length);
-    const quantityNum = parseInt(quantity);
-    
-    if (isNaN(lengthNum) || isNaN(quantityNum)) return null;
-    
-    // Convert length to the material's default unit for stock check
-    let finalLength = lengthNum;
-    if (measurementUnit !== selectedMaterial.measurementUnit) {
-      finalLength = measurementUtils.convertMeasurement(
-        lengthNum,
-        measurementUnit,
-        selectedMaterial.measurementUnit
-      );
-    }
+    setMeasurementUnit(newUnit);
+    setUserMeasurementUnit(newUnit);
+  };
 
-    return getStockStatus(
-      selectedMaterial.currentStock,
-      selectedMaterial.reorderThreshold,
-      finalLength,
-      quantityNum
-    );
-  }, [selectedMaterial, length, quantity, measurementUnit, parseLengthInput]);
-
-  const validateForm = useCallback(() => {
+  const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-
+    
     if (!customerName.trim()) {
       newErrors.customerName = 'Customer name is required';
     }
-
+    
     if (!selectedMaterialId) {
       newErrors.material = 'Please select a material';
     }
-
-    if (!length) {
+    
+    if (!length.trim()) {
       newErrors.length = 'Length is required';
     } else {
       const lengthNum = parseLengthInput(length);
@@ -128,64 +153,39 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
           : 'Please enter a valid length (e.g., 2.5m or 250cm)';
       }
     }
-
-    if (!quantity || parseInt(quantity) <= 0) {
-      newErrors.quantity = 'Quantity must be greater than 0';
+    
+    const quantityNum = parseInt(quantity);
+    if (isNaN(quantityNum) || quantityNum <= 0) {
+      newErrors.quantity = 'Please enter a valid quantity';
     }
-
-    // Check stock availability
-    if (selectedMaterial && length && quantity) {
-      const lengthNum = parseLengthInput(length);
-      const quantityNum = parseInt(quantity);
-      
-      // Convert length to the material's default unit for stock check
-      let finalLength = lengthNum;
-      if (measurementUnit !== selectedMaterial.measurementUnit) {
-        finalLength = measurementUtils.convertMeasurement(
-          lengthNum,
-          measurementUnit,
-          selectedMaterial.measurementUnit
-        );
-      }
-
-      if (finalLength * quantityNum > selectedMaterial.currentStock) {
-        newErrors.stock = `Insufficient stock. Available: ${selectedMaterial.currentStock}${selectedMaterial.measurementUnit === 'imperial' ? 'ft' : 'm'}, Needed: ${(finalLength * quantityNum).toFixed(2)}${selectedMaterial.measurementUnit === 'imperial' ? 'ft' : 'm'}`;
-      }
-    }
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [customerName, selectedMaterialId, length, quantity, selectedMaterial, measurementUnit, parseLengthInput]);
+  };
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      return;
-    }
-
+    if (!validateForm()) return;
+    
     setIsSubmitting(true);
-
+    
     try {
-      const selectedMaterial = materials.find(m => m.id === selectedMaterialId);
-      if (!selectedMaterial) return;
-
       const lengthNum = parseLengthInput(length);
       const quantityNum = parseInt(quantity);
       
-      // Convert length to the material's default unit if different
-      let finalLength = lengthNum;
-      if (measurementUnit !== selectedMaterial.measurementUnit) {
-        finalLength = measurementUtils.convertMeasurement(
-          lengthNum, 
-          measurementUnit, 
-          selectedMaterial.measurementUnit
-        );
-      }
-
-      const materialCost = selectedMaterial.unitCost * finalLength * quantityNum;
+      if (!selectedMaterial) throw new Error('No material selected');
+      
+      // Convert length to material's default unit
+      const finalLength = measurementUnit === selectedMaterial.measurementUnit 
+        ? lengthNum 
+        : measurementUnit === 'imperial' 
+          ? lengthNum * 0.3048
+          : lengthNum * 3.28084;
+      
+      const materialCost = finalLength * selectedMaterial.unitCost * quantityNum;
       const costs = calculateJobCost(materialCost, finalLength, quantityNum);
-
+      
       const newJob: CutJob = {
         id: Date.now().toString(),
         orderCode: dataStore.generateOrderCode(),
@@ -201,8 +201,18 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
         notes: notes.trim() || undefined,
         measurementUnit: selectedMaterial.measurementUnit,
       };
-
+      
+      // Save job
+      const existingJobs = dataStore.getJobs();
       dataStore.saveJob(newJob);
+      
+      // Update material stock
+      const updatedMaterials = materials.map(m => 
+        m.id === selectedMaterial.id 
+          ? { ...m, currentStock: m.currentStock - (finalLength * quantityNum) }
+          : m
+      );
+      dataStore.saveMaterials(updatedMaterials);
       
       // Save user's measurement unit preference
       setUserMeasurementUnit(measurementUnit);
@@ -214,76 +224,11 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
     } finally {
       setIsSubmitting(false);
     }
-  }, [customerName, selectedMaterialId, length, quantity, notes, measurementUnit, materials, validateForm, onJobCreated, parseLengthInput]);
+  };
 
-  const handleInputChange = useCallback((field: string, value: string) => {
-    // Clear field-specific error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-    
-    switch (field) {
-      case 'customerName':
-        setCustomerName(value);
-        break;
-      case 'length':
-        setLength(value);
-        break;
-      case 'quantity':
-        setQuantity(value);
-        break;
-      case 'notes':
-        setNotes(value);
-        break;
-    }
-  }, [errors]);
-
-  const handleUnitChange = useCallback((unit: MeasurementUnit) => {
-    setMeasurementUnit(unit);
-    
-    // Convert length value if user changes units
-    if (length && unit !== measurementUnit) {
-      let lengthNum: number;
-      
-      // Parse current length based on current unit
-      if (measurementUnit === 'imperial') {
-        lengthNum = measurementUtils.parseFeetInches(length);
-      } else {
-        lengthNum = measurementUtils.parseMetersCm(length);
-      }
-      
-      if (!isNaN(lengthNum)) {
-        const convertedLength = measurementUtils.convertMeasurement(
-          lengthNum,
-          measurementUnit,
-          unit
-        );
-        
-        // Format the converted length for the new unit
-        if (unit === 'imperial') {
-          const { feet, inches } = measurementUtils.inchesToFeetInches(convertedLength * 12);
-          if (feet === 0) {
-            setLength(`${inches}"`);
-          } else if (inches === 0) {
-            setLength(`${feet}'`);
-          } else {
-            setLength(`${feet}' ${inches}"`);
-          }
-        } else {
-          const { meters, cm } = measurementUtils.cmToMetersCm(convertedLength * 100);
-          if (cm === 0) {
-            setLength(`${meters}m`);
-          } else {
-            setLength(`${meters}m ${cm}cm`);
-          }
-        }
-      }
-    }
-  }, [length, measurementUnit]);
-
-  if (!materials.length) {
+  if (isLoading) {
     return (
-      <div className="h-full bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-solv-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solv-teal mx-auto mb-4"></div>
           <p className="solv-body text-solv-black">Loading materials...</p>
@@ -387,6 +332,25 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                   </div>
                 </div>
 
+                {/* AI Material Recommendations */}
+                {selectedMaterial && (
+                  <AIMaterialRecommendations
+                    jobRequirements={{
+                      length: parseFloat(length) || 0,
+                      quantity: parseInt(quantity) || 0,
+                      type: selectedMaterial.type
+                    }}
+                    availableMaterials={materials}
+                    onMaterialSelect={(material) => {
+                      setSelectedMaterialId(material.id);
+                      setCustomerName(material.name); // Assuming material name is customer name for now
+                      setLength(`${material.measurementUnit === 'imperial' ? '1' : '1'}`); // Placeholder length
+                      setQuantity(`${material.measurementUnit === 'imperial' ? '1' : '1'}`); // Placeholder quantity
+                      setNotes(`Recommended material: ${material.name}`);
+                    }}
+                  />
+                )}
+
                 {/* Job Specifications */}
                 <div>
                   <h2 className="solv-h2 text-solv-black mb-4 flex items-center gap-2">
@@ -394,23 +358,8 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                     Job Specifications
                   </h2>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor={unitId} className="solv-body font-semibold block mb-2 text-solv-black">
-                        Measurement Unit
-                      </label>
-                      <select
-                        id={unitId}
-                        value={measurementUnit}
-                        onChange={(e) => handleUnitChange(e.target.value as MeasurementUnit)}
-                        className="solv-input"
-                        disabled={isSubmitting}
-                      >
-                        <option value="imperial">Imperial (feet & inches)</option>
-                        <option value="metric">Metric (meters & cm)</option>
-                      </select>
-                    </div>
-                    
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Length */}
                     <div>
                       <label htmlFor={lengthId} className="solv-body font-semibold block mb-2 text-solv-black">
                         Length *
@@ -430,8 +379,8 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                         disabled={isSubmitting}
                       />
                       <p className="solv-small text-solv-black/60 mt-1">
-                        {measurementUnit === 'imperial' 
-                          ? 'Enter as: 5\' 3" or 5.25\' or 5.5' 
+                        {measurementUnit === 'imperial'
+                          ? 'Enter as: 5\' 3" or 5.25\' or 5.5'
                           : 'Enter as: 2.5m or 250cm or 2.5'
                         }
                       </p>
@@ -441,49 +390,83 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                         </p>
                       )}
                     </div>
+
+                    {/* Quantity */}
+                    <div>
+                      <label htmlFor={quantityId} className="solv-body font-semibold block mb-2 text-solv-black">
+                        Quantity *
+                      </label>
+                      <input
+                        id={quantityId}
+                        type="number"
+                        min="1"
+                        value={quantity}
+                        onChange={(e) => handleInputChange('quantity', e.target.value)}
+                        className={cn(
+                          "solv-input",
+                          errors.quantity && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        )}
+                        placeholder="1"
+                        required
+                        aria-describedby={errors.quantity ? `${quantityId}-error` : undefined}
+                        disabled={isSubmitting}
+                      />
+                      {errors.quantity && (
+                        <p id={`${quantityId}-error`} className="text-red-500 text-sm mt-1" role="alert">
+                          {errors.quantity}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
+                  {/* Measurement Unit Toggle */}
                   <div className="mt-4">
-                    <label htmlFor={quantityId} className="solv-body font-semibold block mb-2 text-solv-black">
-                      Quantity *
+                    <label className="solv-body font-semibold block mb-2 text-solv-black">
+                      Measurement Unit
                     </label>
-                    <input
-                      id={quantityId}
-                      type="number"
-                      min="1"
-                      value={quantity}
-                      onChange={(e) => handleInputChange('quantity', e.target.value)}
-                      className={cn(
-                        "solv-input",
-                        errors.quantity && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                      )}
-                      placeholder="1"
-                      required
-                      aria-describedby={errors.quantity ? `${quantityId}-error` : undefined}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleUnitChange('imperial')}
+                        className={cn(
+                          "px-4 py-2 rounded-lg font-medium transition-colors",
+                          measurementUnit === 'imperial'
+                            ? "bg-solv-blue text-white"
+                            : "bg-solv-gray-200 text-solv-black hover:bg-solv-gray-300"
+                        )}
+                      >
+                        Imperial (ft/in)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleUnitChange('metric')}
+                        className={cn(
+                          "px-4 py-2 rounded-lg font-medium transition-colors",
+                          measurementUnit === 'metric'
+                            ? "bg-solv-blue text-white"
+                            : "bg-solv-gray-200 text-solv-black hover:bg-solv-gray-300"
+                        )}
+                      >
+                        Metric (m/cm)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Notes */}
+                  <div>
+                    <label htmlFor={notesId} className="solv-body font-semibold block mb-2 text-solv-black">
+                      Notes (Optional)
+                    </label>
+                    <textarea
+                      id={notesId}
+                      value={notes}
+                      onChange={(e) => handleInputChange('notes', e.target.value)}
+                      className="solv-input"
+                      placeholder="Additional notes or special instructions..."
+                      rows={3}
                       disabled={isSubmitting}
                     />
-                    {errors.quantity && (
-                      <p id={`${quantityId}-error`} className="text-red-500 text-sm mt-1" role="alert">
-                        {errors.quantity}
-                      </p>
-                    )}
                   </div>
-                </div>
-
-                {/* Notes */}
-                <div>
-                  <label htmlFor={notesId} className="solv-body font-semibold block mb-2 text-solv-black">
-                    Notes (Optional)
-                  </label>
-                  <textarea
-                    id={notesId}
-                    value={notes}
-                    onChange={(e) => handleInputChange('notes', e.target.value)}
-                    className="solv-input"
-                    placeholder="Any special instructions or notes..."
-                    rows={3}
-                    disabled={isSubmitting}
-                  />
                 </div>
 
                 {/* Submit Button */}
@@ -500,24 +483,24 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                       </>
                     ) : (
                       <>
-                        <Calculator className="h-4 w-4" />
+                        <CheckCircle className="h-4 w-4" />
                         Create Cut Job
                       </>
                     )}
                   </button>
                 </div>
 
-                {/* Error Display */}
                 {errors.submit && (
-                  <div className="bg-red-50 border border-red-200 rounded-solv p-4">
-                    <p className="text-red-600 text-sm">{errors.submit}</p>
+                  <div className="solv-status-danger">
+                    <AlertTriangle className="h-4 w-4" />
+                    {errors.submit}
                   </div>
                 )}
               </form>
             </div>
           </div>
 
-          {/* Preview Panel */}
+          {/* Sidebar */}
           <div className="space-y-6">
             {/* Cost Calculator */}
             {calculatedCosts && (
@@ -547,7 +530,7 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="solv-body text-solv-black/70">Markup (25%):</span>
+                    <span className="solv-body text-solv-black/70">Markup:</span>
                     <span className="solv-body font-semibold text-solv-black">
                       {formatCurrency(calculatedCosts.markup)}
                     </span>
@@ -565,121 +548,90 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
             )}
 
             {/* Job Summary */}
-            <div className="solv-card">
-              <h3 className="solv-h3 text-solv-black mb-4">Job Summary</h3>
-              
-              {customerName && selectedMaterial && length && quantity ? (
-                <div className="space-y-2">
-                  <p className="solv-body text-solv-black">
-                    <strong>Customer:</strong> {customerName}
-                  </p>
-                  <p className="solv-body text-solv-black">
-                    <strong>Material:</strong> {selectedMaterial.name}
-                  </p>
-                  <p className="solv-body text-solv-black">
-                    <strong>Specifications:</strong> {length} × {quantity} pieces
-                  </p>
-                  <p className="solv-body text-solv-black">
-                    <strong>Total Length:</strong> {
-                      (() => {
-                        const lengthNum = parseLengthInput(length);
-                        const totalLength = lengthNum * parseInt(quantity);
-                        if (measurementUnit === 'imperial') {
-                          const { feet, inches } = measurementUtils.inchesToFeetInches(totalLength * 12);
-                          if (feet === 0) return `${inches}"`;
-                          if (inches === 0) return `${feet}'`;
-                          return `${feet}' ${inches}"`;
-                        } else {
-                          const { meters, cm } = measurementUtils.cmToMetersCm(totalLength * 100);
-                          if (cm === 0) return `${meters}m`;
-                          return `${meters}m ${cm}cm`;
-                        }
-                      })()
-                    }
-                  </p>
-                  <p className="solv-body text-solv-black">
-                    <strong>Stock After Cut:</strong> {
-                      (() => {
-                        if (!selectedMaterial) return 'N/A';
-                        const lengthNum = parseLengthInput(length || '0');
-                        const quantityNum = parseInt(quantity || '1');
-                        const stockAfter = selectedMaterial.currentStock - (lengthNum * quantityNum);
-                        if (selectedMaterial.measurementUnit === 'imperial') {
-                          const { feet, inches } = measurementUtils.inchesToFeetInches(stockAfter * 12);
-                          if (feet === 0) return `${inches}"`;
-                          if (inches === 0) return `${feet}'`;
-                          return `${feet}' ${inches}"`;
-                        } else {
-                          const { meters, cm } = measurementUtils.cmToMetersCm(stockAfter * 100);
-                          if (cm === 0) return `${meters}m`;
-                          return `${meters}m ${cm}cm`;
-                        }
-                      })()
-                    }
-                  </p>
-                  {notes && (
-                    <p className="solv-body text-solv-black">
-                      <strong>Notes:</strong> {notes}
-                    </p>
-                  )}
+            {selectedMaterial && (
+              <div className="solv-card">
+                <h3 className="solv-h3 text-solv-black mb-4">Job Summary</h3>
+                
+                <div className="space-y-3">
+                  <div>
+                    <span className="solv-small text-solv-black/60">Material:</span>
+                    <div className="solv-body font-semibold text-solv-black">
+                      {selectedMaterial.name}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <span className="solv-small text-solv-black/60">Type:</span>
+                    <div className="solv-body font-semibold text-solv-black capitalize">
+                      {selectedMaterial.type}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <span className="solv-small text-solv-black/60">Unit Cost:</span>
+                    <div className="solv-body font-semibold text-solv-black">
+                      {formatCurrency(selectedMaterial.unitCost)}/{selectedMaterial.measurementUnit === 'imperial' ? 'ft' : 'm'}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <span className="solv-small text-solv-black/60">Current Stock:</span>
+                    <div className="solv-body font-semibold text-solv-black">
+                      {selectedMaterial.measurementUnit === 'imperial' 
+                        ? measurementUtils.inchesToFeetInches(selectedMaterial.currentStock * 12)
+                        : measurementUtils.cmToMetersCm(selectedMaterial.currentStock * 100)
+                      }
+                    </div>
+                  </div>
                 </div>
-              ) : (
-                <p className="solv-body text-solv-black/50 text-center py-8">
-                  Job details will appear here
-                </p>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Stock Status */}
             {stockStatus && (
               <div className={cn(
-                "border-2 border-solv-black rounded-solv p-4",
-                stockStatus.status === 'insufficient' && "bg-red-50",
-                stockStatus.status === 'low' && "bg-orange-50",
-                stockStatus.status === 'sufficient' && "bg-green-50"
+                "solv-card",
+                stockStatus.status === 'critical' && "border-red-300 bg-red-50",
+                stockStatus.status === 'low' && "border-yellow-300 bg-yellow-50",
+                stockStatus.status === 'good' && "border-green-300 bg-green-50"
               )}>
-                <div className="flex items-center gap-2 mb-2">
-                  {stockStatus.status === 'insufficient' && <AlertTriangle className="h-5 w-5 text-red-600" />}
-                  {stockStatus.status === 'low' && <AlertTriangle className="h-5 w-5 text-orange-600" />}
-                  {stockStatus.status === 'sufficient' && <CheckCircle className="h-5 w-5 text-green-600" />}
-                  <p className={cn("solv-body font-semibold", stockStatus.color)}>
-                    {stockStatus.message}
-                  </p>
+                <h3 className="solv-h3 text-solv-black mb-4 flex items-center gap-2">
+                  <Package className="h-5 w-5" />
+                  Stock Status
+                </h3>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="solv-body text-solv-black/70">Status:</span>
+                    <span className={cn(
+                      "solv-badge",
+                      stockStatus.status === 'critical' && "bg-red-100 text-red-800 border-red-300",
+                      stockStatus.status === 'low' && "bg-yellow-100 text-yellow-800 border-yellow-300",
+                      stockStatus.status === 'good' && "bg-green-100 text-green-800 border-green-300"
+                    )}>
+                      {stockStatus.status === 'critical' ? 'Critical' : 
+                       stockStatus.status === 'low' ? 'Low' : 'Good'}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="solv-body text-solv-black/70">Available:</span>
+                    <span className="solv-body font-semibold text-solv-black">
+                      {stockStatus.available.toFixed(2)} {selectedMaterial?.measurementUnit === 'imperial' ? 'ft' : 'm'}
+                    </span>
+                  </div>
+                  
+                  {stockStatus.status !== 'good' && (
+                    <div className="mt-3 p-3 bg-solv-black/5 rounded-lg">
+                      <p className="solv-small text-solv-black/70">
+                        {stockStatus.status === 'critical' 
+                          ? '⚠️ Critical stock level. Consider reordering soon.'
+                          : '⚠️ Stock is getting low. Monitor closely.'
+                        }
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <p className="solv-small text-solv-black">
-                  Current stock: {
-                    (() => {
-                      if (!selectedMaterial) return 'N/A';
-                      if (selectedMaterial.measurementUnit === 'imperial') {
-                        const { feet, inches } = measurementUtils.inchesToFeetInches(selectedMaterial.currentStock * 12);
-                        if (feet === 0) return `${inches}"`;
-                        if (inches === 0) return `${feet}'`;
-                        return `${feet}' ${inches}"`;
-                      } else {
-                        const { meters, cm } = measurementUtils.cmToMetersCm(selectedMaterial.currentStock * 100);
-                        if (cm === 0) return `${meters}m`;
-                        return `${meters}m ${cm}cm`;
-                      }
-                    })()
-                  } | 
-                  Needed: {
-                    (() => {
-                      const lengthNum = parseLengthInput(length || '0');
-                      const quantityNum = parseInt(quantity || '1');
-                      const needed = lengthNum * quantityNum;
-                      if (measurementUnit === 'imperial') {
-                        const { feet, inches } = measurementUtils.inchesToFeetInches(needed * 12);
-                        if (feet === 0) return `${inches}"`;
-                        if (inches === 0) return `${feet}'`;
-                        return `${feet}' ${inches}"`;
-                      } else {
-                        const { meters, cm } = measurementUtils.cmToMetersCm(needed * 100);
-                        if (cm === 0) return `${meters}m`;
-                        return `${meters}m ${cm}cm`;
-                      }
-                    })()
-                  }
-                </p>
               </div>
             )}
           </div>

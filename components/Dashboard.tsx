@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { AlertTriangle, Package, Scissors, CheckCircle2, Clock, TrendingUp, Warehouse, ShoppingCart, Eye } from 'lucide-react';
+import { AlertTriangle, Package, Scissors, CheckCircle2, Clock, TrendingUp, Warehouse, ShoppingCart, Eye, Brain, Sparkles, MessageSquare } from 'lucide-react';
 import { dataStore } from '../services/dataStore';
 import { CutJob, ReorderAlert } from '../types';
+import AIInsightsDashboard from './AIInsightsDashboard';
+import AIFeaturesShowcase from './AIFeaturesShowcase';
+import AIAssistant from './AIAssistant';
 
 interface DashboardProps {
   onNewJob: () => void;
@@ -14,23 +17,78 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
   const [pendingJobs, setPendingJobs] = useState<CutJob[]>([]);
   const [completedJobs, setCompletedJobs] = useState<CutJob[]>([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [showAIInsights, setShowAIInsights] = useState(false);
+  const [showAIFeatures, setShowAIFeatures] = useState(false);
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [materials, setMaterials] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<CutJob[]>([]);
 
   useEffect(() => {
     // Load dashboard data
     const alerts = dataStore.getReorderAlerts();
-    const jobs = dataStore.getJobs();
-    const pending = jobs.filter(job => job.status === 'pending');
-    const completed = jobs.filter(job => job.status === 'completed');
+    const allJobs = dataStore.getJobs();
+    const pending = allJobs.filter(job => job.status === 'pending');
+    const completed = allJobs.filter(job => job.status === 'completed');
     const revenue = completed.reduce((sum, job) => sum + job.totalCost, 0);
+    const allMaterials = dataStore.getMaterials();
 
     setReorderAlerts(alerts);
     setPendingJobs(pending);
     setCompletedJobs(completed);
     setTotalRevenue(revenue);
+    setMaterials(allMaterials);
+    setJobs(allJobs);
   }, []);
 
   return (
     <div className="space-y-8">
+      {/* AI-Powered Header */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Brain className="w-8 h-8 text-blue-600" />
+            <div>
+              <h1 className="text-3xl font-bold text-blue-900">
+                AI-Powered Cut & Order Manager
+              </h1>
+              <p className="text-lg text-blue-800">Transform your business with intelligent AI solutions</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setShowAIFeatures(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>View AI Features</span>
+            </button>
+            <button
+              onClick={() => setShowAIAssistant(true)}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>AI Assistant</span>
+            </button>
+            <button
+              onClick={() => setShowAIInsights(!showAIInsights)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2 ${
+                showAIInsights 
+                  ? 'bg-green-600 hover:bg-green-700 text-white' 
+                  : 'bg-solv-gray-200 hover:bg-solv-gray-300 text-solv-black'
+              }`}
+            >
+              <Brain className="w-4 h-4" />
+              <span>{showAIInsights ? 'Hide AI Insights' : 'Show AI Insights'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Insights Dashboard */}
+      {showAIInsights && (
+        <AIInsightsDashboard materials={materials} jobs={jobs} />
+      )}
+
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="space-y-2">
@@ -68,7 +126,7 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
                   className="solv-button-primary bg-red-600 hover:bg-red-700"
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
-                  Order Now
+                  Manage Inventory
                 </button>
               </div>
             </div>
@@ -214,6 +272,20 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
           ))}
         </div>
       </div>
+
+      {/* AI Features Showcase Modal */}
+      {showAIFeatures && (
+        <AIFeaturesShowcase onClose={() => setShowAIFeatures(false)} />
+      )}
+
+      {/* AI Assistant Modal */}
+      {showAIAssistant && (
+        <AIAssistant 
+          materials={materials} 
+          jobs={jobs} 
+          onClose={() => setShowAIAssistant(false)} 
+        />
+      )}
     </div>
   );
 }
