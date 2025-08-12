@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { AlertTriangle, Package, Scissors, CheckCircle2, Clock, TrendingUp, Warehouse, ShoppingCart, Brain, Sparkles, MessageSquare, Zap, Target, BarChart3 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { AlertTriangle, Package, Scissors, Clock, TrendingUp, Warehouse, Brain, Sparkles, MessageSquare, Zap, Target, BarChart3 } from 'lucide-react';
 import { dataStore } from '../services/dataStore';
 import { CutJob, ReorderAlert } from '../types';
 import { aiService } from '../services/aiService';
-import { cn, formatCurrency } from '../utils';
+import { cn } from '../utils';
 
 interface DashboardProps {
   onNewJob: () => void;
@@ -17,7 +17,6 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
   const [completedJobs, setCompletedJobs] = useState<CutJob[]>([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [materials, setMaterials] = useState<any[]>([]);
-  const [jobs, setJobs] = useState<CutJob[]>([]);
   const [aiInsights, setAiInsights] = useState<any>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(true);
 
@@ -35,7 +34,6 @@ export function Dashboard({ onNewJob, onManageInventory, onViewJobs }: Dashboard
     setCompletedJobs(completed);
     setTotalRevenue(revenue);
     setMaterials(allMaterials);
-    setJobs(allJobs);
 
     // Load AI insights
     setTimeout(() => {

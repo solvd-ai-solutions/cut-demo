@@ -4,7 +4,6 @@ import { dataStore, getUserMeasurementUnit, setUserMeasurementUnit } from '../se
 import { Material, CutJob, MeasurementUnit } from '../types';
 import { cn, formatCurrency, calculateJobCost, getStockStatus, a11y } from '../utils';
 import { measurementUtils } from '../utils';
-import AIMaterialRecommendations from './AIMaterialRecommendations';
 
 interface CutJobFormProps {
   onBack: () => void;
