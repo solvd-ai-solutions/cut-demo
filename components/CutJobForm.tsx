@@ -47,47 +47,62 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
   const calculatedCosts = useMemo(() => {
     if (!selectedMaterial || !length || !quantity) return null;
     
-    const lengthNum = parseLengthInput(length);
-    const quantityNum = parseInt(quantity);
-    
-    if (isNaN(lengthNum) || isNaN(quantityNum)) return null;
-    
-    // Convert length to material's default unit for calculation
-    const finalLength = measurementUnit === selectedMaterial.measurementUnit 
-      ? lengthNum 
-      : measurementUnit === 'imperial' 
-        ? lengthNum * 0.3048 // feet to meters
-        : lengthNum * 3.28084; // meters to feet
-    
-    const materialCost = finalLength * selectedMaterial.unitCost * quantityNum;
-    const costs = calculateJobCost(materialCost, finalLength, quantityNum);
-    
-    return costs;
+    try {
+      const lengthNum = parseLengthInput(length);
+      const quantityNum = parseInt(quantity);
+      
+      if (isNaN(lengthNum) || isNaN(quantityNum)) return null;
+      
+      // Convert length to material's default unit for calculation
+      const finalLength = measurementUnit === selectedMaterial.measurementUnit 
+        ? lengthNum 
+        : measurementUnit === 'imperial' 
+          ? lengthNum * 0.3048 // feet to meters
+          : lengthNum * 3.28084; // meters to feet
+      
+      const materialCost = finalLength * selectedMaterial.unitCost * quantityNum;
+      const costs = calculateJobCost(materialCost, finalLength, quantityNum);
+      
+      return costs;
+    } catch (error) {
+      console.error('Error calculating costs:', error);
+      return null;
+    }
   }, [selectedMaterial, length, quantity, measurementUnit]);
 
   const stockStatus = useMemo(() => {
-    if (!selectedMaterial) return null;
+    if (!selectedMaterial || !length || !quantity) return null;
     
-    // Convert length to material's default unit for stock check
-    const lengthNum = parseLengthInput(length);
-    const quantityNum = parseInt(quantity);
-    
-    if (isNaN(lengthNum) || isNaN(quantityNum)) return null;
-    
-    const finalLength = measurementUnit === selectedMaterial.measurementUnit 
-      ? lengthNum 
-      : measurementUnit === 'imperial' 
-        ? lengthNum * 0.3048
-        : lengthNum * 3.28084;
-    
-    return getStockStatus(selectedMaterial.currentStock, selectedMaterial.reorderThreshold, finalLength, quantityNum);
+    try {
+      // Convert length to material's default unit for stock check
+      const lengthNum = parseLengthInput(length);
+      const quantityNum = parseInt(quantity);
+      
+      if (isNaN(lengthNum) || isNaN(quantityNum)) return null;
+      
+      const finalLength = measurementUnit === selectedMaterial.measurementUnit 
+        ? lengthNum 
+        : measurementUnit === 'imperial' 
+          ? lengthNum * 0.3048
+          : lengthNum * 3.28084;
+      
+      return getStockStatus(selectedMaterial.currentStock, selectedMaterial.reorderThreshold, finalLength, quantityNum);
+    } catch (error) {
+      console.error('Error calculating stock status:', error);
+      return null;
+    }
   }, [selectedMaterial, length, quantity, measurementUnit]);
 
   const parseLengthInput = useCallback((input: string): number => {
-    if (measurementUnit === 'imperial') {
-      return measurementUtils.parseFeetInches(input);
-    } else {
-      return measurementUtils.parseMetersCm(input);
+    try {
+      if (measurementUnit === 'imperial') {
+        return measurementUtils.parseFeetInches(input);
+      } else {
+        return measurementUtils.parseMetersCm(input);
+      }
+    } catch (error) {
+      console.error('Error parsing length input:', error);
+      return 0;
     }
   }, [measurementUnit]);
 
@@ -319,7 +334,20 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
                     <select
                       id={materialId}
                       value={selectedMaterialId}
-                      onChange={(e) => setSelectedMaterialId(e.target.value)}
+                      onChange={(e) => {
+                        try {
+                          const materialId = e.target.value;
+                          setSelectedMaterialId(materialId);
+                          
+                          // Clear any previous errors
+                          if (errors.material) {
+                            setErrors(prev => ({ ...prev, material: '' }));
+                          }
+                        } catch (error) {
+                          console.error('Error selecting material:', error);
+                          setErrors(prev => ({ ...prev, material: 'Error selecting material' }));
+                        }
+                      }}
                       className={cn(
                         "solv-input",
                         errors.material && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
@@ -345,21 +373,17 @@ export function CutJobForm({ onBack, onJobCreated }: CutJobFormProps) {
 
                 {/* AI Material Recommendations */}
                 {selectedMaterial && (
-                  <AIMaterialRecommendations
-                    jobRequirements={{
-                      length: parseFloat(length) || 0,
-                      quantity: parseInt(quantity) || 0,
-                      type: selectedMaterial.type
-                    }}
-                    availableMaterials={materials}
-                    onMaterialSelect={(material) => {
-                      setSelectedMaterialId(material.id);
-                      setCustomerName(material.name); // Assuming material name is customer name for now
-                      setLength(`${material.measurementUnit === 'imperial' ? '1' : '1'}`); // Placeholder length
-                      setQuantity(`${material.measurementUnit === 'imperial' ? '1' : '1'}`); // Placeholder quantity
-                      setNotes(`Recommended material: ${material.name}`);
-                    }}
-                  />
+                  <div className="mt-6">
+                    <h3 className="solv-h3 text-solv-black mb-4 flex items-center gap-2">
+                      <Package className="h-5 w-5" />
+                      AI Material Recommendations
+                    </h3>
+                    <div className="p-4 bg-solv-gray-50 rounded-lg border border-solv-gray-200">
+                      <p className="text-sm text-solv-black/70">
+                        AI analysis will appear here once you enter length and quantity requirements.
+                      </p>
+                    </div>
+                  </div>
                 )}
 
                 {/* Job Specifications */}
